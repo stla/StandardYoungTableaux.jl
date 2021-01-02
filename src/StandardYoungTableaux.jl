@@ -60,7 +60,7 @@ function _checkSYTrows(tableau)
   all(map(row -> all(diff(row) .> 0), tableau))
 end
 
-function _isSYT(tableau) # isSYT([[1], [2,3]]) is true ! - ça ne check pas la shape
+function _isSYT(tableau) # _isSYT([[1], [2,3]]) is true ! - does not check shape
   entries = vcat(tableau...)
   return issetequal(entries, 1:length(entries)) &&
          _checkSYTrows(tableau) &&
@@ -111,7 +111,7 @@ function _isBallotSequence(s::Vector{Int64}) # https://oeis.org/A000085
   end
   for k = 1:length(s)
     init = s[1:k]
-    for r = 1:maximum(init) # erreur dans R, faut partir de r=1
+    for r = 1:maximum(init) 
       if length(findall(==(r), init)) < length(findall(==(r + 1), init))
         return false
       end
@@ -267,10 +267,10 @@ function _islastsyt(tableau)
 end
 
 function _firstsyt(lambda, a)
-  lambda = filter(!=(0), lambda) # dans R je ne fais pas ça mais ça marche quand même
+  lambda = filter(!=(0), lambda) 
   N = sum(lambda)
   if N == 1
-    return [1]
+    return [[1]]
   end
   it = N
   lambda0 = zeros(Int64, N)
@@ -343,7 +343,6 @@ function firstSYT(lambda::IPartition)
     false
   )
 end
-
 
 """
     nextSYT(syt)
@@ -472,9 +471,11 @@ function RS(sigma)
   for i = 2:length(sigma)
     out = _bump(out.P, out.Q, sigma[i], i)
   end
-  return (P = StandardYoungTableau(out.P, false), Q = StandardYoungTableau(out.Q, false))
+  return (
+    P = StandardYoungTableau(out.P, false), 
+    Q = StandardYoungTableau(out.Q, false)
+  )
 end
-
 
 function _whichRow(tableau, x)
   idx = findfirst(==(x), tableau[1])
