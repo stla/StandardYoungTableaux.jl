@@ -1,5 +1,7 @@
 module StandardYoungTableaux
 
+import Distributions
+
 export IPartition
 export StandardYoungTableau
 export dualSYT
@@ -14,6 +16,8 @@ export countSYTx
 export RS
 export SYT2YoungPath
 export YoungPath2SYT
+export randomSYT
+export randomYoungPath
 
 """
     IPartition(partition)
@@ -608,6 +612,45 @@ function randomSYT(lambda::IPartition)
     a[N - m + 1] = i
   end
   return StandardYoungTableau(_ballot2syt(a), false)
+end
+
+function _connectedPartitions(partition0)
+  partition = copy(partition0)
+  partition[1] += 1
+  out = [partition]
+  for i in 2:length(partition0)
+    if partition0[i] < partition0[i - 1]
+      partition = copy(partition0)
+      partition[i] += 1
+      push!(out, partition)
+    end
+  end
+  return vcat(out, [vcat(partition0, 1)])
+end
+
+"""
+    randomYoungPath(n)
+
+Samples a path of the Young graph according to the Plancherel growth process.
+
+# Argument
+`n`: a positive integer, the size of the path to be sampled
+
+# Example
+
+    path = randomYoungPath(5)
+    YoungPath2SYT(path)
+"""
+function randomYoungPath(n::Int64)
+  path = [[1]]
+  for i in 1:(n-1)
+    set = _connectedPartitions(path[i])
+    f_nu = countSYTx(IPartition(path[i], false))
+    probs = map(p -> countSYTx(IPartition(p, false)), set) ./ ((i + 1) * f_nu)
+    k = rand(Distributions.Categorical(probs))
+    push!(path, set[k])
+  end
+  return map(x -> IPartition(x, false), path)
 end
 
 end

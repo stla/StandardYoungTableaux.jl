@@ -3,6 +3,9 @@ uuid = "ae443f46-3c91-4a85-9741-732d995991b6"
 authors = ["Stéphane Laurent <laurent_step@outlook.fr>"]
 version = "0.1.0"
 
+[deps]
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+
 [compat]
 julia = "1.2"
 
