@@ -558,4 +558,56 @@ function YoungPath2SYT(path::Vector{IPartition})
   return StandardYoungTableau(tableau, false)
 end
 
+"""
+    randomSYT(lambda)
+
+Uniformly random standard Young tableau of a given shape.
+
+# Argument
+- `lambda`: an integer partition, the shape
+"""
+function randomSYT(lambda::IPartition)
+  partition = copy(lambda.partition)
+  N = lambda.n
+  a = zeros(Int64, N)
+  i = 0
+  k = 0
+  while true
+    i += 1
+    for j in 1:partition[i]
+      a[j] += 1
+      k += 1
+    end
+    if N <= k
+      break
+    end
+  end
+  for m in 1:N
+    local i, j
+    while true
+      i = rand(1:a[1])
+      j = rand(1:partition[1])
+      if i <= a[j] && j <= partition[i]
+        break
+      end
+    end
+    while true
+      ih = a[j] + partition[i] - i - j
+      if ih == 0
+        break
+      end
+      k = rand(1:ih)
+      if k <= (partition[i] - j)
+        j += k
+      else
+        i += k - partition[i] + j
+      end
+    end
+    partition[i] -= 1
+    a[j] -= 1
+    a[N - m + 1] = i
+  end
+  return StandardYoungTableau(_ballot2syt(a), false)
+end
+
 end
