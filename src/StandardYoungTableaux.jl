@@ -455,7 +455,7 @@ end
 """
     RS(sigma)
 
-Pair of standard Young tableaux given by the Robinson-Schensted correspondence from a permutation.
+Pair of standard Young tableaux given by the Robinson-Schensted(-Knuth) correspondence from a permutation.
 
 # Argument
 - `sigma`: a permutation given as a vector of integers
