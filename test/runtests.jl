@@ -12,7 +12,7 @@ function sameSYTx(syt1, syt2)
 end
 
 @testset "dual SYT" begin
-  syt = StandardYoungTableau([1,2,6], [3,5], [4])
+  syt = StandardYoungTableau([[1,2,6], [3,5], [4]])
   dsyt = dualSYT(syt)
   ddsyt = dualSYT(dsyt)
   @test sameSYTx(syt, ddsyt)
@@ -31,4 +31,10 @@ end
   @test sameSYTx(sytx[1], firstSYT(lambda))
   @test sameSYTx(sytx[2], nextSYT(sytx[1]))
   @test isnothing(nextSYT(sytx[:end]))
+end
+
+@testset "growth process" begin
+  syt = StandardYoungTableau([[1,2,6], [3,5], [4]])
+  path = SYT2YoungPath(syt)
+  @test sameSYTx(syt, YoungPath2SYT(path))
 end
