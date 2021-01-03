@@ -46,3 +46,11 @@ end
   @test sameVectors(b, SYT2ballot(syt))
   @test sameSYTx(syt, StandardYoungTableau([[1,2,6], [3,5], [4]]))
 end
+
+@testset "RS" begin
+  sigma = [1, 3, 6, 4, 7, 5, 2]
+  PQ = RS(sigma)
+  QP = RS(invperm(sigma))
+  @test sameSYTx(PQ.P, QP.Q)
+  @test sameSYTx(PQ.Q, QP.P)
+end
