@@ -38,3 +38,10 @@ end
   path = SYT2YoungPath(syt)
   @test sameSYTx(syt, YoungPath2SYT(path))
 end
+
+@testset "ballot" begin
+  b = [1, 1, 2, 3, 2, 1]
+  syt = ballot2SYT(b)
+  @test sameVectors(b, SYT2ballot(syt))
+  @test sameSYTx(syt, StandardYoungTableau([[1,2,6], [3,5], [4]]))
+end
