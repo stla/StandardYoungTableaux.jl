@@ -358,7 +358,11 @@ The 'next' standard Young tableau.
     nextSYT(y)
 """
 function nextSYT(syt::StandardYoungTableau)
-  return StandardYoungTableau(_nextsyt(syt.tableau), false)
+  succ = _nextsyt(syt.tableau)
+  if isnothing(succ)
+    return nothing
+  end
+  return StandardYoungTableau(succ, false)
 end
 
 function _dualPartition(lambda)

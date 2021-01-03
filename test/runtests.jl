@@ -31,7 +31,7 @@ end
   @test length(sytx) == countSYTx(lambda)
   @test sameSYTx(sytx[1], firstSYT(lambda))
   @test sameSYTx(sytx[2], nextSYT(sytx[1]))
-  #@test isnothing(nextSYT(last(sytx)))
+  @test isnothing(nextSYT(last(sytx)))
 end
 
 @testset "growth process" begin
