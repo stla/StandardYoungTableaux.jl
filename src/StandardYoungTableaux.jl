@@ -252,7 +252,7 @@ function allSYTx(lambda::IPartition)
     (a, more) = _ballot(lambda.partition, a, true)
     push!(As, copy(a))
   end
-  return map(ballot2syt, As)
+  return map(x -> StandardYoungTableau(x, false), map(_ballot2syt, As))
 end
 
 function _islastsyt(tableau)
