@@ -24,4 +24,11 @@ end
   @test sameVectors(lambda.partition, syt.shape.partition)
 end
 
-
+@testset "enumeration" begin
+  lambda = IPartition([5,2,1])
+  sytx = allSYTx(lambda)
+  @test length(sytx) == countSYTx(lambda)
+  @test sameSYTx(sytx[1], firstSYT(lambda))
+  @test sameSYTx(sytx[2], nextSYT(sytx[1]))
+  @test isnothing(nextSYT(sytx[:end]))
+end
