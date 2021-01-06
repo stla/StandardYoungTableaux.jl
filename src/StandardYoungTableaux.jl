@@ -172,10 +172,10 @@ function ballot2SYT(b::Vector{Int64})
   return StandardYoungTableau(_ballot2syt(b), false)
 end
 
-function _ballot(lambda, a, more)
-  N = sum(lambda)
+function _ballot(N, lambda, a, more)
+  #N = sum(lambda)
   it = N
-  if more
+  @inbounds if more
     lambda = zeros(Int64, N)
     lambda[1] = 1
     isave = 0
@@ -201,11 +201,11 @@ function _ballot(lambda, a, more)
     end
   end # end of 'if more'
   lambda0 = zeros(Int64, N)
-  lambda0[1:length(lambda)] = lambda
+  @inbounds lambda0[1:length(lambda)] = lambda
   lambda = lambda0
   k = 1
   ir = 1
-  while true
+  @inbounds while true
     if N < ir
       break
     end
@@ -224,7 +224,7 @@ function _ballot(lambda, a, more)
   if N == 1
     return (a = a, more = false)
   end
-  for j = 1:(N-1)
+  @inbounds for j = 1:(N-1)
     if a[j+1] < a[j]
       return (a = a, more = true)
     end
@@ -246,13 +246,14 @@ All standard Young tableaux of a given shape.
     allSYTx(lambda)
 """
 function allSYTx(lambda::IPartition)
-  (a, more) = _ballot(lambda.partition, zeros(Int64, lambda.n), false)
-  As = [copy(a)]
+  N = sum(lambda.partition)
+  (a, more) = _ballot(N, lambda.partition, zeros(Int64, lambda.n), false)
+  out = [StandardYoungTableau(_ballot2syt(a), false)]
   while more
-    (a, more) = _ballot(lambda.partition, a, true)
-    push!(As, copy(a))
+    (a, more) = _ballot(N, lambda.partition, a, true)
+    push!(out, StandardYoungTableau(_ballot2syt(a), false))
   end
-  return map(x -> StandardYoungTableau(x, false), map(_ballot2syt, As))
+  return out
 end
 
 function _islastsyt(tableau)
