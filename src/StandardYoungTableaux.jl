@@ -8,6 +8,7 @@ export dualSYT
 export SYT2ballot
 export ballot2SYT
 export allSYTx
+export allBallotSequences
 export firstSYT
 export nextSYT
 export hooks
@@ -140,7 +141,7 @@ end
 """
     SYT2ballot(syt)
 
-Ballot sequence corresponding to a standard Young tableau.
+The ballot sequence corresponding to a standard Young tableau.
 
 # Argument
 - `syt`: a standard Young tableau
@@ -150,17 +151,13 @@ function SYT2ballot(syt::StandardYoungTableau)
 end
 
 function _ballot2syt(a::Vector{Int64})
-  tableau = repeat([Int64[]], maximum(a))
-  for i = 1:length(a)
-    tableau[a[i]] = vcat(tableau[a[i]], i)
-  end
-  return tableau
+  return map(i -> findall(==(i), a), 1:maximum(a))
 end
 
 """
     ballot2SYT(b)
 
-Standard Young tableau corresponding to a ballot sequence.
+The standard Young tableau corresponding to a ballot sequence.
 
 # Argument
 - `b`: a ballot sequence (vector of integers)
@@ -233,6 +230,26 @@ function _ballot(N, lambda, a, more)
 end
 
 """
+    allBallotSequences(lambda)
+
+All ballot sequences associated to a given integer partition.
+
+# Argument
+- `lambda`: an integer partition
+"""
+function allBallotSequences(lambda::IPartition)
+  N = lambda.n
+  partition = lambda.partition
+  (a, more) = _ballot(N, partition, zeros(Int64, N), false)
+  out = [copy(a)]
+  while more
+    (a, more) = _ballot(N, partition, a, true)
+    push!(out, copy(a))
+  end
+  return out
+end
+
+"""
     allSYTx(lambda)
 
 All standard Young tableaux of a given shape.
@@ -246,11 +263,12 @@ All standard Young tableaux of a given shape.
     allSYTx(lambda)
 """
 function allSYTx(lambda::IPartition)
-  N = sum(lambda.partition)
-  (a, more) = _ballot(N, lambda.partition, zeros(Int64, lambda.n), false)
+  N = lambda.n
+  partition = lambda.partition
+  (a, more) = _ballot(N, partition, zeros(Int64, N), false)
   out = [StandardYoungTableau(_ballot2syt(a), false)]
   while more
-    (a, more) = _ballot(N, lambda.partition, a, true)
+    (a, more) = _ballot(N, partition, a, true)
     push!(out, StandardYoungTableau(_ballot2syt(a), false))
   end
   return out
