@@ -62,9 +62,9 @@ julia> YoungPath2SYT(path)
 StandardYoungTableau(IPartition(4, [3, 1]), [[1, 3, 4], [2]])
 ```
 
-![](http://stla.github.io/stlapblog/posts/assets/img/young_yng_path.png)
+<img src="http://stla.github.io/stlapblog/posts/assets/img/young_yng_path.png" width="400" />
 
-Plancherel growth process:
+- Plancherel growth process:
 
 ```julia
 julia> path = randomYoungPath(5)
